@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 void main(){
-  runApp(Text("Hello Flutter", textDirection: TextDirection.ltr,),);
+  runApp(
+    Center(
+      child:Text(
+        "Hello Flutter",
+        style: TextStyle(fontSize:30), 
+        textDirection: TextDirection.ltr,
+        ),
+      ),
+    );
 
 
 }
