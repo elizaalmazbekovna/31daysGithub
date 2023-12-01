@@ -1,68 +1,55 @@
 import 'package:flutter/material.dart';
 
-class MyAppBar extends StatelessWidget {
-  const MyAppBar({required this.title, super.key});
+class CounterDisplay extends StatelessWidget {
+  const CounterDisplay({required this.count, super.key});
 
-  // Fields in a Widget subclass are always marked "final".
-
-  final Widget title;
+  final int count;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 56, // in logical pixels
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(color: Colors.blue[500]),
-      // Row is a horizontal, linear layout.
-      child: Row(
-        children: [
-          const IconButton(
-            icon: Icon(Icons.menu),
-            tooltip: 'Navigation menu',
-            onPressed: null, // null disables the button
-          ),
-          // Expanded expands its child
-          // to fill the available space.
-          Expanded(
-            child: title,
-          ),
-          const IconButton(
-            icon: Icon(Icons.search),
-            tooltip: 'Search',
-            onPressed: null,
-          ),
-        ],
-      ),
+    return Text('Count: $count');
+  }
+}
+
+class CounterIncrementor extends StatelessWidget {
+  const CounterIncrementor({required this.onPressed, super.key});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      child: const Text('Increment'),
     );
   }
 }
 
-class MyScaffold extends StatelessWidget {
-  const MyScaffold({super.key});
+class Counter extends StatefulWidget {
+  const Counter({super.key});
+
+  @override
+  State<Counter> createState() => _CounterState();
+}
+
+class _CounterState extends State<Counter> {
+  int _counter = 0;
+
+  void _increment() {
+    setState(() {
+      ++_counter;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Material is a conceptual piece
-    // of paper on which the UI appears.
-    return Material(
-      // Column is a vertical, linear layout.
-      child: Column(
-        children: [
-          MyAppBar(
-            title: Text(
-              'Example title',
-              style: Theme.of(context) //
-                  .primaryTextTheme
-                  .titleLarge,
-            ),
-          ),
-          const Expanded(
-            child: Center(
-              child: Text('Hello, world!'),
-            ),
-          ),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        CounterIncrementor(onPressed: _increment),
+        const SizedBox(width: 16),
+        CounterDisplay(count: _counter),
+      ],
     );
   }
 }
@@ -70,13 +57,13 @@ class MyScaffold extends StatelessWidget {
 void main() {
   runApp(
     const MaterialApp(
-      title: 'My app', // used by the OS task switcher
-      home: SafeArea(
-        child: MyScaffold(),
+      home: Scaffold(
+        body: Center(
+          child: Counter(),
+        ),
       ),
     ),
   );
 }
-
 
 
