@@ -1,70 +1,78 @@
 import 'package:flutter/material.dart';
 
-class Product {
-  const Product({required this.name});
+class MyAppBar extends StatelessWidget {
+  const MyAppBar({required this.title, super.key});
 
-  final String name;
-}
+  // Fields in a Widget subclass are always marked "final".
 
-typedef CartChangedCallback = Function(Product product, bool inCart);
-
-class ShoppingListItem extends StatelessWidget {
-  ShoppingListItem({
-    required this.product,
-    required this.inCart,
-    required this.onCartChanged,
-  }) : super(key: ObjectKey(product));
-
-  final Product product;
-  final bool inCart;
-  final CartChangedCallback onCartChanged;
-
-  Color _getColor(BuildContext context) {
-    // The theme depends on the BuildContext because different
-    // parts of the tree can have different themes.
-    // The BuildContext indicates where the build is
-    // taking place and therefore which theme to use.
-
-    return inCart //
-        ? Colors.black54
-        : Theme.of(context).primaryColor;
-  }
-
-  TextStyle? _getTextStyle(BuildContext context) {
-    if (!inCart) return null;
-
-    return const TextStyle(
-      color: Colors.black54,
-      decoration: TextDecoration.lineThrough,
-    );
-  }
+  final Widget title;
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: () {
-        onCartChanged(product, inCart);
-      },
-      leading: CircleAvatar(
-        backgroundColor: _getColor(context),
-        child: Text(product.name[0]),
+    return Container(
+      height: 56, // in logical pixels
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(color: Colors.blue[500]),
+      // Row is a horizontal, linear layout.
+      child: Row(
+        children: [
+          const IconButton(
+            icon: Icon(Icons.menu),
+            tooltip: 'Navigation menu',
+            onPressed: null, // null disables the button
+          ),
+          // Expanded expands its child
+          // to fill the available space.
+          Expanded(
+            child: title,
+          ),
+          const IconButton(
+            icon: Icon(Icons.search),
+            tooltip: 'Search',
+            onPressed: null,
+          ),
+        ],
       ),
-      title: Text(product.name, style: _getTextStyle(context)),
+    );
+  }
+}
+
+class MyScaffold extends StatelessWidget {
+  const MyScaffold({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Material is a conceptual piece
+    // of paper on which the UI appears.
+    return Material(
+      // Column is a vertical, linear layout.
+      child: Column(
+        children: [
+          MyAppBar(
+            title: Text(
+              'Example title',
+              style: Theme.of(context) //
+                  .primaryTextTheme
+                  .titleLarge,
+            ),
+          ),
+          const Expanded(
+            child: Center(
+              child: Text('Hello, world!'),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
 void main() {
   runApp(
-    MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: ShoppingListItem(
-            product: const Product(name: 'Chips'),
-            inCart: true,
-            onCartChanged: (product, inCart) {},
-          ),
-        ),
+    const MaterialApp(
+      title: 'My app', // used by the OS task switcher
+      home: SafeArea(
+        child: MyScaffold(),
       ),
     ),
   );
